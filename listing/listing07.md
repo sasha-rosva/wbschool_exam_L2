@@ -83,8 +83,8 @@ func merge(a, b <-chan int) <-chan int {
 				if ok{c <- v}else{m+=1}
 			}
 			if k>=1&&m>=1{
-				close(c)
-				break}
+				close(c) // при отсутствии данных из обоих каналов - закрываем общий! Если не закроем, будем бесконечно выводить в stdout значение int 
+				break}   // по умолчанию, т.е. 0
 		}
 	}()
 	return c
