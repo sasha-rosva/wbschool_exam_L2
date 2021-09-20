@@ -13,8 +13,6 @@ package main
 Программа должна проходить все тесты. Код должен проходить проверки go vet и golint.
 */
 
-package main
-
 import (
 	"flag"
 	"fmt"
