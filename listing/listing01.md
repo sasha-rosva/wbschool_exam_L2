@@ -15,6 +15,7 @@ func main() {
 ```
 
 Ответ:
+```go
 package main
 import (
 "fmt"
@@ -27,3 +28,4 @@ func main() {
 	// Выводим созданный слайс в stdout
 	fmt.Println(b) // [77 78 79]
 }
+```
