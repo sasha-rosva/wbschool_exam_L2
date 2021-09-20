@@ -34,7 +34,7 @@ func main() {
 ```
 
 Ответ:
-```
+```go
 package main
 import (
 "fmt"
