@@ -1,4 +1,4 @@
-module baseTask
+module WB_TECH_2_task1
 
 go 1.16
 
