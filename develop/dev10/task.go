@@ -24,6 +24,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -58,7 +59,7 @@ func read(conn net.Conn, cancelFunc context.CancelFunc) {
 	scanner := bufio.NewScanner(conn)
 	for {
 		if !scanner.Scan() {
-			log.Printf("connection was closed")
+			log.Printf("соединение было прервано")
 			cancelFunc()
 			return
 		}
@@ -71,15 +72,24 @@ func write(conn net.Conn, cancelFunc context.CancelFunc) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		if !scanner.Scan() {
-			log.Printf("CANNOT STDIN SCAN")
+			log.Println("CANNOT STDIN SCAN")
 			cancelFunc()
 			return
 		}
 		str := scanner.Text()
 
+		sl := strings.Split(fmt.Sprintf("% x", str), " ")
+		for _, u := range sl {
+			if u == "04" {
+				log.Println("вы нажали ctrl+D. telnet клиент будет закрыт!")
+				cancelFunc()
+				return
+			}
+
+		}
 		_, err := conn.Write([]byte(fmt.Sprintln(str)))
 		if err != nil {
-			log.Println("send to server error", err)
+			log.Println("ошибка при отправке на сервер", err)
 			cancelFunc()
 			return
 		}
@@ -89,7 +99,7 @@ func write(conn net.Conn, cancelFunc context.CancelFunc) {
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	signalChan := make(chan os.Signal)
+	signalChan := make(chan os.Signal, 1)
 	signal.Notify(signalChan, syscall.SIGINT)
 	go func() {
 		sgn := <-signalChan
@@ -97,12 +107,7 @@ func main() {
 		cancel()
 	}()
 
-	addr, err := net.ResolveTCPAddr("tcp", net.JoinHostPort(host, port))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	conn, err := net.DialTimeout(addr.Network(), addr.String(), timeout)
+	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -113,5 +118,5 @@ func main() {
 	go write(conn, cancel)
 
 	<-ctx.Done()
-	log.Println("finish telnet client")
+	log.Println("telnet клиент закрыт")
 }
