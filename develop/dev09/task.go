@@ -15,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var (
@@ -60,9 +61,15 @@ func main() {
 		s = args[0]
 	}
 	if *output == "" {
-		fmt.Println("Выберите имя файла и его расширение:")
-		_, err := fmt.Scan(output)
-		errorChecker(err)
+		as := strings.Split(s, "/")
+		if len(as[len(as)-1]) > 3 {
+			*output = as[len(as)-1]
+		} else {
+			fmt.Println("Выберите имя файла и его расширение:")
+			_, err := fmt.Scan(output)
+			errorChecker(err)
+		}
 	}
 	wget(s, *output)
 }
+
