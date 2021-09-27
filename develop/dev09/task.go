@@ -9,23 +9,22 @@ package main
 */
 
 import (
+	"flag"
+	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
-	"strings"
 )
 
+var (
+	output = flag.String("o", "", "имя файла, в который будут сохранены полученные данные")
+)
 
-func Wget(url, fileName string) {
+func wget(url, fileName string) {
 	resp := getResponse(url)
-	if fileName == "" {
-		urlSplit := strings.Split(url, "/")
-		fileName = urlSplit[len(urlSplit)-1]
-	}
 	writeToFile(fileName, resp)
 }
-
-
 
 func getResponse(url string) *http.Response {
 	tr := new(http.Transport)
@@ -34,8 +33,6 @@ func getResponse(url string) *http.Response {
 	errorChecker(err)
 	return resp
 }
-
-
 
 func writeToFile(fileName string, resp *http.Response) {
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0777)
@@ -47,9 +44,25 @@ func writeToFile(fileName string, resp *http.Response) {
 
 func errorChecker(err error) {
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		os.Exit(1)
 	}
 }
-func main(){
-	Wget("https://top4man.ru/inews/aHR0cHM6Ly9jZG5pbWcucmcucnUvaW1nL2NvbnRlbnQvMjAyLzAwLzQ0LzEwMTBfZF84NTAuanBn","1.jpg")
+func main() {
+	flag.Parse()
+	args := flag.Args()
+	var s string
+	if len(args) < 1 {
+		fmt.Println("Введите адрес ссылки:")
+		_, err := fmt.Scan(&s)
+		errorChecker(err)
+	} else {
+		s = args[0]
+	}
+	if *output == "" {
+		fmt.Println("Выберите имя файла и его расширение:")
+		_, err := fmt.Scan(output)
+		errorChecker(err)
+	}
+	wget(s, *output)
 }
