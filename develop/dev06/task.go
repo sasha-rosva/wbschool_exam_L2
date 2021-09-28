@@ -22,7 +22,7 @@ import (
 )
 
 var (
-	f    = flag.Int("f", 0, `"fields" - выбрать поля (колонки)`)
+	f    = flag.Int("f", -1, `"fields" - выбрать поля (колонки)`)
 	d    = flag.String("d", `\t`, `"delimiter" - использовать другой разделитель`)
 	s    = flag.Bool("s", false, `"separated" - только строки с разделителем`)
 	file string
@@ -117,18 +117,31 @@ func main() {
 		}
 	}
 	for _, v := range a {
+		if v[len(v)-1] == "" {
+			v = v[:len(v)-1]
+		}
 		if len(v) < *sss.f {
 			_, _ = fmt.Fprintf(os.Stderr, "error: index out of range [%d] with length %d\n", *sss.f, len(v))
 			os.Exit(1)
 		}
 	}
-	fmt.Println(a)
 
 	for _, v := range a {
-		for ii, vv := range v {
-			if ii == *sss.f-1 {
-				fmt.Println(vv)
+		switch *sss.f {
+		case 0:
+			_, _ = fmt.Fprintln(os.Stderr, "error: отчет столбцов начинается с номера '1'")
+			os.Exit(1)
+
+		case -1:
+			fmt.Println(v)
+		default:
+			for ii, vv := range v {
+				if ii == *sss.f-1 {
+					fmt.Println(vv)
+				}
 			}
 		}
 	}
 }
+
+
