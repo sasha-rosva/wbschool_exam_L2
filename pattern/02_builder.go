@@ -15,19 +15,19 @@ func newRussianBuilder() *russianBuilder {
 	return &russianBuilder{}
 }
 
-func (b *russianBuilder) cookSideDish() {
+func (b russianBuilder) cookSideDish() {
 	b.sideDish = "Заливное из судака"
 }
 
-func (b *russianBuilder) cookSoap() {
+func (b russianBuilder) cookSoap() {
 	b.soap = "Борщ"
 }
 
-func (b *russianBuilder) cookMainDish() {
+func (b russianBuilder) cookMainDish() {
 	b.mainDish = "Бефстроганов из говядины"
 }
 
-func (b *russianBuilder) getLaunch() launch {
+func (b russianBuilder) getLaunch() launch {
 	return launch{
 		sideDish:   b.sideDish,
 		soap: b.soap,
@@ -44,19 +44,19 @@ func newMexicanBuilder() *mexicanBuilder {
 	return &mexicanBuilder{}
 }
 
-func (b *mexicanBuilder) cookSideDish() {
+func (b mexicanBuilder) cookSideDish() {
 	b.sideDish = "Кесадилья"
 }
 
-func (b *mexicanBuilder) cookSoap() {
+func (b mexicanBuilder) cookSoap() {
 	b.soap = "Чили кон карне"
 }
 
-func (b *mexicanBuilder) cookMainDish() {
+func (b mexicanBuilder) cookMainDish() {
 	b.mainDish = "Фахитос"
 }
 
-func (b *mexicanBuilder) getLaunch() launch {
+func (b mexicanBuilder) getLaunch() launch {
 	return launch{
 		sideDish:   b.sideDish,
 		soap: b.soap,
@@ -95,11 +95,11 @@ func newDirector(b iBuilder) *director {
 	}
 }
 
-func (d *director) setBuilder(b iBuilder) {
+func (d director) setBuilder(b iBuilder) {
 	d.builder = b
 }
 
-func (d *director) cookLaunch() launch {
+func (d director) cookLaunch() launch {
 	d.builder.cookSideDish()
 	d.builder.cookSoap()
 	d.builder.cookMainDish()
