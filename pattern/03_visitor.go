@@ -44,7 +44,7 @@ func (s *Slice) visitArray(a *Array) {
 func main() {
 	map1 := &Map{"Map"}
 	array1 := &Array{"Array"}
-	slice := &Slice{"Slice"}
+	slice := &Slice{"Slice"} // это visitor
 
 	map1.accept(slice)
 	array1.accept(slice)
