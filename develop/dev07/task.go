@@ -42,8 +42,8 @@ import (
 func manyToOne(channels ...<-chan interface{}) <-chan interface{} {
 	var group sync.WaitGroup
 	output := make(chan interface{}, 1)
+	group.Add(len(channels))
 	for i := range channels {
-		group.Add(1)
 		go func(input <-chan interface{}) {
 			for val := range input {
 				output <- val
