@@ -25,12 +25,12 @@ import (
 	"strings"
 )
 
-func anagramma(a ...string) *map[string][]string {
+func anagramma(a *[]string) *map[string][]string {
 	var arStringIntAll []string
 	map1 := make(map[string]int)
 	map2 := make(map[string][]string)
 	map3 := make(map[string][]string)
-	for _, v := range a {
+	for _, v := range *a {
 		word := strings.ToLower(v)
 		runes := []rune(word)
 		var arRuneInt []int
@@ -53,7 +53,7 @@ func anagramma(a ...string) *map[string][]string {
 		if v4 > 1 {
 			for i5, v5 := range arStringIntAll {
 				if i4 == v5 {
-					map2[i4] = append(map2[i4], strings.ToLower(a[i5]))
+					map2[i4] = append(map2[i4], strings.ToLower((*a)[i5]))
 				}
 			}
 		}
@@ -66,3 +66,4 @@ func anagramma(a ...string) *map[string][]string {
 	}
 	return &map3
 }
+
